@@ -1,110 +1,105 @@
-# Calorie Tracker
+<div align="center">
 
-A small, self-hosted calorie & macro tracker inspired by apps like MyFitnessPal —
-built from scratch (Flask + SQLite + vanilla JS), not a copy of anyone's
-proprietary code. Everything runs locally; your data stays in a SQLite file
-on your own machine.
+# Calora
+
+**A calorie & macro tracker built from scratch — Flask, SQLite, vanilla JS.**
+
+[![Live Demo](https://img.shields.io/badge/demo-live-2f9e6e?style=flat-square)](https://calora-qa13.onrender.com/)
+[![Python](https://img.shields.io/badge/python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/flask-3.0-000000?style=flat-square&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
+
+**[Try it live →](https://calora-qa13.onrender.com/)**
+
+</div>
+
+---
+
+## What it is
+
+Calora is a self-built, MyFitnessPal-style calorie and macro tracker —
+not a copy of anyone's proprietary code, built from scratch with a Flask
+API, a SQLite database, and a single-page vanilla-JS frontend. No
+framework build step, no external services, no tracking.
 
 ## Features
 
 - **BMR / TDEE calculator** — Mifflin-St Jeor equation, adjustable by
-  activity level, with a daily calorie goal based on lose / maintain / gain.
-- **Food search + log** — seeded with ~80 common foods (fruits, veg,
-  proteins, grains, dairy, fast food, snacks). Search, pick a serving count,
-  assign to a meal (breakfast/lunch/dinner/snack), and log it.
-- **Custom foods** — anything not in the seed list can be added by hand
-  (name, serving size, calories, protein/carbs/fat) and is saved for reuse.
+  activity level, with a daily calorie goal for losing, maintaining, or
+  gaining weight.
+- **Food search & logging** — ~80 seeded common foods across fruits,
+  vegetables, proteins, grains, dairy, fast food, and snacks. Search,
+  choose a serving count, assign to a meal, and log it.
+- **Custom foods** — anything missing can be added by hand and is saved
+  for future searches.
 - **Daily summary** — calories eaten vs. goal, remaining calories, and a
-  protein/carb/fat breakdown.
-- **Date navigation** — step backward/forward to log or review any day.
+  protein / carb / fat breakdown with visual bars.
+- **Date navigation** — step backward and forward to log or review any
+  day.
 
-## Requirements
+## Tech stack
 
-- Python 3.9+
-- No other services — SQLite ships with Python's standard library.
+| Layer     | Choice                                   |
+|-----------|-------------------------------------------|
+| Backend   | Flask (Python), REST-style JSON API        |
+| Database  | SQLite (`sqlite3`, standard library only)  |
+| Frontend  | Vanilla HTML / CSS / JS — no framework      |
+| Hosting   | [Render](https://render.com) (free tier)    |
 
-## Setup
+## Run it locally
 
 ```bash
-cd calorie-tracker
+git clone https://github.com/Doudougassama/Calora.git
+cd Calora
 python3 -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python app.py
 ```
 
-Then open **http://127.0.0.1:5000** in your browser.
-
-The first run creates `instance/calorie_tracker.db` and seeds it with the
-starter food list automatically — nothing else to configure.
+Open **http://127.0.0.1:5000**. The first run creates
+`instance/calorie_tracker.db` and seeds it automatically — nothing else
+to configure.
 
 ## Project structure
 
 ```
-calorie-tracker/
+Calora/
 ├── app.py            # Flask routes / API
-├── database.py        # SQLite schema + connection helper
-├── seed_data.py        # Starter food list (~80 items)
+├── database.py         # SQLite schema + connection helper
+├── seed_data.py         # Starter food list (~80 items)
 ├── requirements.txt
 ├── templates/
-│   └── index.html      # Single-page UI
+│   └── index.html       # Single-page UI
 ├── static/
 │   ├── style.css
-│   └── app.js          # Fetch calls to the API, all UI logic
-└── instance/            # Created at runtime, holds the .db file (git-ignored)
+│   └── app.js            # All frontend logic, calls the API
+└── instance/              # Created at runtime, holds the .db file (git-ignored)
 ```
 
 ## API reference
 
-| Method | Route              | Purpose                                   |
-|--------|---------------------|--------------------------------------------|
-| GET    | `/api/foods?q=`     | Search foods by name                      |
-| POST   | `/api/foods`        | Add a custom food                         |
-| GET    | `/api/log?date=`    | List log entries for a date               |
-| POST   | `/api/log`          | Add a log entry (by `food_id` or ad hoc)  |
-| DELETE | `/api/log/<id>`     | Remove a log entry                        |
-| GET    | `/api/summary?date=`| Daily totals + remaining calories         |
-| GET    | `/api/profile`      | Get saved profile/goal                    |
-| POST   | `/api/profile`      | Save profile, recompute BMR/TDEE/goal     |
+| Method | Route                | Purpose                                    |
+|--------|------------------------|----------------------------------------------|
+| GET    | `/api/foods?q=`       | Search foods by name                        |
+| POST   | `/api/foods`          | Add a custom food                           |
+| GET    | `/api/log?date=`      | List log entries for a date                 |
+| POST   | `/api/log`            | Add a log entry (by `food_id` or ad hoc)    |
+| DELETE | `/api/log/<id>`       | Remove a log entry                          |
+| GET    | `/api/summary?date=`  | Daily totals + remaining calories           |
+| GET    | `/api/profile`        | Get saved profile / goal                    |
+| POST   | `/api/profile`        | Save profile, recompute BMR / TDEE / goal   |
 
-## A note on how this was verified
+## Deployment notes
 
-This was built and code-reviewed carefully (route names, request payloads,
-and DOM element IDs were all cross-checked between `app.js`, `index.html`,
-and `app.py`), but it was **not run end-to-end** in a live Python
-environment before being handed to you — the build sandbox didn't have a
-working shell at the time. Please run it locally and sanity-check it (add a
-food, save a profile, delete an entry) before you rely on it. If anything
-breaks, the error will show up in the terminal running `python app.py` and
-in the browser console (F12).
-
-## Push to your own GitHub
-
-From inside the `calorie-tracker` folder:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit: calorie tracker (Flask + SQLite)"
-```
-
-Then create an empty repository on GitHub (no README/license, so it stays
-empty) at **https://github.com/new**, and push:
-
-```bash
-git branch -M main
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git push -u origin main
-```
-
-If you'd rather use SSH:
-
-```bash
-git remote add origin git@github.com:<your-username>/<repo-name>.git
-git push -u origin main
-```
+Deployed on Render's free tier: `pip install -r requirements.txt` as the
+build command, `gunicorn --bind 0.0.0.0:$PORT app:app` as the start
+command. The free tier has an ephemeral filesystem, so the SQLite file
+resets on redeploys and periods of inactivity — the seeded food list
+repopulates automatically, but logged entries won't survive a restart.
+For persistent data, attach a Render disk or point `database.py` at a
+managed Postgres instance instead.
 
 ## License
 
-No license file is included — add one (MIT is a common default for small
-personal projects) if you plan to make the repo public.
+MIT — see [LICENSE](LICENSE).
