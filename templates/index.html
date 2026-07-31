@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calorie Tracker</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Calorie Tracker</h1>
+    <div class="date-nav">
+      <button id="prevDay" class="icon-btn" title="Previous day">&larr;</button>
+      <input type="date" id="logDate">
+      <button id="nextDay" class="icon-btn" title="Next day">&rarr;</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Summary -->
+    <section class="card summary-card">
+      <h2>Today's summary</h2>
+      <div class="summary-grid">
+        <div class="stat">
+          <span class="stat-value" id="sumCalories">0</span>
+          <span class="stat-label">calories eaten</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="sumGoal">&mdash;</span>
+          <span class="stat-label">goal</span>
+        </div>
+        <div class="stat" id="remainingStat">
+          <span class="stat-value" id="sumRemaining">&mdash;</span>
+          <span class="stat-label">remaining</span>
+        </div>
+      </div>
+      <div class="macro-bars">
+        <div class="macro-row">
+          <span class="macro-label">Protein</span>
+          <div class="bar"><div class="bar-fill protein" id="barProtein"></div></div>
+          <span class="macro-value" id="valProtein">0g</span>
+        </div>
+        <div class="macro-row">
+          <span class="macro-label">Carbs</span>
+          <div class="bar"><div class="bar-fill carbs" id="barCarbs"></div></div>
+          <span class="macro-value" id="valCarbs">0g</span>
+        </div>
+        <div class="macro-row">
+          <span class="macro-label">Fat</span>
+          <div class="bar"><div class="bar-fill fat" id="barFat"></div></div>
+          <span class="macro-value" id="valFat">0g</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Add food -->
+    <section class="card">
+      <h2>Log food</h2>
+      <div class="add-food-form">
+        <input type="text" id="foodSearch" placeholder="Search foods (e.g. chicken, apple)...">
+        <div id="searchResults" class="search-results"></div>
+
+        <div class="add-food-row" id="selectedFoodRow" hidden>
+          <span id="selectedFoodName"></span>
+          <input type="number" id="servingsInput" value="1" min="0.1" step="0.1">
+          <span class="serving-desc" id="selectedServingDesc"></span>
+          <select id="mealSelect">
+            <option value="breakfast">Breakfast</option>
+            <option value="lunch">Lunch</option>
+            <option value="dinner">Dinner</option>
+            <option value="snack" selected>Snack</option>
+          </select>
+          <button id="addLogBtn" class="primary-btn">Add</button>
+        </div>
+
+        <details class="custom-food-toggle">
+          <summary>Can't find it? Add a custom food</summary>
+          <div class="custom-food-form">
+            <input type="text" id="customName" placeholder="Food name">
+            <input type="text" id="customServing" placeholder="Serving (e.g. 1 cup)">
+            <input type="number" id="customCalories" placeholder="Calories">
+            <input type="number" id="customProtein" placeholder="Protein (g)">
+            <input type="number" id="customCarbs" placeholder="Carbs (g)">
+            <input type="number" id="customFat" placeholder="Fat (g)">
+            <button id="saveCustomFoodBtn" class="secondary-btn">Save food</button>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Log entries -->
+    <section class="card">
+      <h2>Today's log</h2>
+      <div id="logList" class="log-list">
+        <p class="empty-state">No food logged yet today.</p>
+      </div>
+    </section>
+
+    <!-- Profile / goals -->
+    <section class="card">
+      <h2>Profile &amp; goal</h2>
+      <form id="profileForm" class="profile-form">
+        <label>Sex
+          <select id="pSex">
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+          </select>
+        </label>
+        <label>Age
+          <input type="number" id="pAge" min="10" max="120" required>
+        </label>
+        <label>Height (cm)
+          <input type="number" id="pHeight" min="100" max="250" required>
+        </label>
+        <label>Weight (kg)
+          <input type="number" id="pWeight" min="30" max="400" step="0.1" required>
+        </label>
+        <label>Activity level
+          <select id="pActivity">
+            <option value="sedentary">Sedentary (little/no exercise)</option>
+            <option value="light">Light (1-3 days/week)</option>
+            <option value="moderate" selected>Moderate (3-5 days/week)</option>
+            <option value="active">Active (6-7 days/week)</option>
+            <option value="very_active">Very active (hard daily training)</option>
+          </select>
+        </label>
+        <label>Goal
+          <select id="pGoal">
+            <option value="lose">Lose weight</option>
+            <option value="maintain" selected>Maintain weight</option>
+            <option value="gain">Gain weight</option>
+          </select>
+        </label>
+        <button type="submit" class="primary-btn">Save &amp; calculate</button>
+      </form>
+      <div id="profileResult" class="profile-result" hidden>
+        <div class="stat"><span class="stat-value" id="rBmr">0</span><span class="stat-label">BMR (cal/day)</span></div>
+        <div class="stat"><span class="stat-value" id="rTdee">0</span><span class="stat-label">TDEE (cal/day)</span></div>
+        <div class="stat"><span class="stat-value" id="rGoal">0</span><span class="stat-label">Daily goal (cal)</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Runs entirely on your own machine &mdash; data is stored in a local SQLite file.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
