@@ -3,49 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calorie Tracker</title>
+<title>Calora — Calorie & Macro Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+  <div class="bg-glow"></div>
+
   <header class="topbar">
-    <h1>Calorie Tracker</h1>
+    <div class="brand">
+      <span class="brand-mark">C</span>
+      <div class="brand-text">
+        <h1>Calora</h1>
+        <span class="brand-tagline">calorie &amp; macro tracker</span>
+      </div>
+    </div>
     <div class="date-nav">
-      <button id="prevDay" class="icon-btn" title="Previous day">&larr;</button>
+      <button id="prevDay" class="icon-btn" title="Previous day" aria-label="Previous day">&larr;</button>
       <input type="date" id="logDate">
-      <button id="nextDay" class="icon-btn" title="Next day">&rarr;</button>
+      <button id="nextDay" class="icon-btn" title="Next day" aria-label="Next day">&rarr;</button>
     </div>
   </header>
 
   <main class="layout">
     <!-- Summary -->
-    <section class="card summary-card">
-      <h2>Today's summary</h2>
-      <div class="summary-grid">
-        <div class="stat">
-          <span class="stat-value" id="sumCalories">0</span>
-          <span class="stat-label">calories eaten</span>
+    <section class="card summary-card fade-in">
+      <div class="summary-top">
+        <div class="ring-wrap">
+          <svg class="ring" width="176" height="176" viewBox="0 0 176 176">
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#34d399"></stop>
+                <stop offset="100%" stop-color="#059669"></stop>
+              </linearGradient>
+            </defs>
+            <circle class="ring-track" cx="88" cy="88" r="78"></circle>
+            <circle class="ring-fill" id="ringFill" cx="88" cy="88" r="78" stroke="url(#ringGrad)"></circle>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-value" id="sumCalories">0</span>
+            <span class="ring-label">calories</span>
+          </div>
         </div>
-        <div class="stat">
-          <span class="stat-value" id="sumGoal">&mdash;</span>
-          <span class="stat-label">goal</span>
-        </div>
-        <div class="stat" id="remainingStat">
-          <span class="stat-value" id="sumRemaining">&mdash;</span>
-          <span class="stat-label">remaining</span>
+        <div class="summary-side">
+          <div class="side-stat">
+            <span class="side-stat-icon">&#127919;</span>
+            <div>
+              <span class="side-stat-value" id="sumGoal">&mdash;</span>
+              <span class="side-stat-label">daily goal</span>
+            </div>
+          </div>
+          <div class="side-stat" id="remainingStat">
+            <span class="side-stat-icon">&#9889;</span>
+            <div>
+              <span class="side-stat-value" id="sumRemaining">&mdash;</span>
+              <span class="side-stat-label">remaining</span>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="macro-bars">
         <div class="macro-row">
+          <span class="macro-dot protein"></span>
           <span class="macro-label">Protein</span>
           <div class="bar"><div class="bar-fill protein" id="barProtein"></div></div>
           <span class="macro-value" id="valProtein">0g</span>
         </div>
         <div class="macro-row">
+          <span class="macro-dot carbs"></span>
           <span class="macro-label">Carbs</span>
           <div class="bar"><div class="bar-fill carbs" id="barCarbs"></div></div>
           <span class="macro-value" id="valCarbs">0g</span>
         </div>
         <div class="macro-row">
+          <span class="macro-dot fat"></span>
           <span class="macro-label">Fat</span>
           <div class="bar"><div class="bar-fill fat" id="barFat"></div></div>
           <span class="macro-value" id="valFat">0g</span>
@@ -54,21 +88,25 @@
     </section>
 
     <!-- Add food -->
-    <section class="card">
-      <h2>Log food</h2>
+    <section class="card fade-in delay-1">
+      <h2><span class="h2-icon">&#128269;</span>Log food</h2>
       <div class="add-food-form">
-        <input type="text" id="foodSearch" placeholder="Search foods (e.g. chicken, apple)...">
+        <div class="search-input-wrap">
+          <input type="text" id="foodSearch" placeholder="Search foods — try &quot;chicken&quot; or &quot;apple&quot;...">
+        </div>
         <div id="searchResults" class="search-results"></div>
 
         <div class="add-food-row" id="selectedFoodRow" hidden>
-          <span id="selectedFoodName"></span>
-          <input type="number" id="servingsInput" value="1" min="0.1" step="0.1">
-          <span class="serving-desc" id="selectedServingDesc"></span>
-          <select id="mealSelect">
-            <option value="breakfast">Breakfast</option>
-            <option value="lunch">Lunch</option>
-            <option value="dinner">Dinner</option>
-            <option value="snack" selected>Snack</option>
+          <div class="selected-food-info">
+            <span id="selectedFoodName"></span>
+            <span class="serving-desc" id="selectedServingDesc"></span>
+          </div>
+          <input type="number" id="servingsInput" value="1" min="0.1" step="0.1" aria-label="Servings">
+          <select id="mealSelect" aria-label="Meal">
+            <option value="breakfast">🌅 Breakfast</option>
+            <option value="lunch">☀️ Lunch</option>
+            <option value="dinner">🌙 Dinner</option>
+            <option value="snack" selected>🍎 Snack</option>
           </select>
           <button id="addLogBtn" class="primary-btn">Add</button>
         </div>
@@ -89,16 +127,16 @@
     </section>
 
     <!-- Log entries -->
-    <section class="card">
-      <h2>Today's log</h2>
+    <section class="card fade-in delay-2">
+      <h2><span class="h2-icon">&#128203;</span>Today's log</h2>
       <div id="logList" class="log-list">
-        <p class="empty-state">No food logged yet today.</p>
+        <p class="empty-state">No food logged yet for this day.</p>
       </div>
     </section>
 
     <!-- Profile / goals -->
-    <section class="card">
-      <h2>Profile &amp; goal</h2>
+    <section class="card fade-in delay-3">
+      <h2><span class="h2-icon">&#9878;&#65039;</span>Profile &amp; goal</h2>
       <form id="profileForm" class="profile-form">
         <label>Sex
           <select id="pSex">
@@ -131,7 +169,7 @@
             <option value="gain">Gain weight</option>
           </select>
         </label>
-        <button type="submit" class="primary-btn">Save &amp; calculate</button>
+        <button type="submit" class="primary-btn full-span">Save &amp; calculate</button>
       </form>
       <div id="profileResult" class="profile-result" hidden>
         <div class="stat"><span class="stat-value" id="rBmr">0</span><span class="stat-label">BMR (cal/day)</span></div>
@@ -142,7 +180,7 @@
   </main>
 
   <footer class="footer">
-    <p>Runs entirely on your own machine &mdash; data is stored in a local SQLite file.</p>
+    <p>Built with Flask &amp; SQLite &middot; data stored locally, no tracking.</p>
   </footer>
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>

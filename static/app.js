@@ -6,6 +6,9 @@ const state = {
   searchTimer: null,
 };
 
+const RING_CIRCUMFERENCE = 2 * Math.PI * 78; // matches r=78 in the SVG
+const MEAL_ICONS = { breakfast: "🌅", lunch: "☀️", dinner: "🌙", snack: "🍎" };
+
 function todayISO() {
   const d = new Date();
   const offset = d.getTimezoneOffset();
@@ -167,7 +170,7 @@ async function loadLog() {
 
     const title = document.createElement("div");
     title.className = "meal-group-title";
-    title.textContent = meal;
+    title.textContent = `${MEAL_ICONS[meal] || ""} ${meal}`;
     container.appendChild(title);
 
     mealEntries.forEach((entry) => {
@@ -214,6 +217,16 @@ async function loadSummary() {
   setMacroBar("Protein", summary.protein_g, (summary.protein_g * 4) / macroCalorieBasis);
   setMacroBar("Carbs", summary.carbs_g, (summary.carbs_g * 4) / macroCalorieBasis);
   setMacroBar("Fat", summary.fat_g, (summary.fat_g * 9) / macroCalorieBasis);
+
+  setCalorieRing(summary.calories, summary.calorie_goal);
+}
+
+function setCalorieRing(calories, goal) {
+  const ring = document.getElementById("ringFill");
+  const fraction = goal ? Math.min(1, calories / goal) : 0;
+  const offset = RING_CIRCUMFERENCE * (1 - fraction);
+  ring.style.strokeDasharray = `${RING_CIRCUMFERENCE}`;
+  ring.style.strokeDashoffset = `${offset}`;
 }
 
 function setMacroBar(label, grams, fraction) {
