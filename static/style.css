@@ -396,6 +396,10 @@ body {
   animation: fadeUp 0.3s ease both;
 }
 
+/* `display: flex` above outranks the UA's `[hidden] { display: none }`, so the
+   row has to opt back out explicitly or it survives being hidden in JS. */
+.add-food-row[hidden] { display: none; }
+
 .selected-food-info {
   display: flex;
   flex-direction: column;
