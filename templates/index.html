@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calora — Calorie & Macro Tracker</title>
+<link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icon.svg') }}">
+<meta name="theme-color" content="#d7263d">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
@@ -14,7 +16,9 @@
 
   <header class="topbar">
     <div class="brand">
-      <span class="brand-mark">C</span>
+      <span class="brand-mark">
+        <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M 26 6.28 A 14 14 0 1 0 26 27.72" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/></svg>
+      </span>
       <div class="brand-text">
         <h1>Calora</h1>
         <span class="brand-tagline">calorie &amp; macro tracker</span>
@@ -35,8 +39,8 @@
           <svg class="ring" width="176" height="176" viewBox="0 0 176 176">
             <defs>
               <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#34d399"></stop>
-                <stop offset="100%" stop-color="#059669"></stop>
+                <stop offset="0%" stop-color="#f05266"></stop>
+                <stop offset="100%" stop-color="#a6172b"></stop>
               </linearGradient>
             </defs>
             <circle class="ring-track" cx="88" cy="88" r="78"></circle>
